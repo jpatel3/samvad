@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../common/Button';
-import { useAppStore } from '../../store/useAppStore';
+import { useAppStore, useActiveTrackProgress } from '../../store/useAppStore';
 import { useLanguage } from '../../hooks/useLanguage';
 import type { ReadingLockState } from '../../types';
 
@@ -14,7 +14,7 @@ export function NavigationControls({ readingId, lockState, totalReadings }: Navi
   const navigate = useNavigate();
   const { t } = useLanguage();
   const markComplete = useAppStore((s) => s.markComplete);
-  const completedReadings = useAppStore((s) => s.completedReadings);
+  const { completedReadings } = useActiveTrackProgress();
 
   const isCompleted = completedReadings.includes(readingId);
   const hasPrev = readingId > 1;

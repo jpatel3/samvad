@@ -1,6 +1,6 @@
 export const en = {
   app: {
-    title: 'Ten Minute Vachanamrut',
+    title: 'Samvad',
     subtitle: 'Daily Spiritual Reading',
   },
   nav: {
@@ -69,14 +69,13 @@ export const en = {
     currentStreak: 'Current Streak',
     longestStreak: 'Longest Streak',
     readingsCompleted: 'Readings Completed',
-    prakaranProgress: 'Prakaran Progress',
+    prakaranProgress: 'Section Progress',
     readingCalendar: 'Reading Calendar',
     milestones: 'Milestones',
     dayMilestone: 'day milestone',
   },
   browse: {
-    title: 'Browse Vachanamrut',
-    vachanamruts: 'Vachanamruts',
+    title: 'Browse',
     readings: 'Readings',
     locked: 'Locked',
     completed: 'Completed',
@@ -96,7 +95,17 @@ export const en = {
     reset: 'Reset',
     cancel: 'Cancel',
     about: 'About',
+    aboutSamvad: 'About Samvad',
     version: 'Version',
+  },
+  tracks: {
+    vachanamrut: 'Vachanamrut',
+    gita: 'Bhagavad Gita',
+    comingSoon: 'Coming Soon',
+  },
+  about: {
+    title: 'About Samvad',
+    subtitle: 'Dialogue as Spiritual Practice',
   },
   xp: {
     level: 'Level',

@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Prakaran } from '../../types';
+import type { Section } from '../../types';
 import { useReadingsByPrakaran } from '../../hooks/useReadings';
-import { useAppStore } from '../../store/useAppStore';
+import { useActiveTrackProgress } from '../../store/useAppStore';
 import { useLanguage } from '../../hooks/useLanguage';
 import { getReadingLockState, canAccessReading } from '../../utils/contentLocking';
 import { Card } from '../common/Card';
 
 interface PrakaranAccordionProps {
-  prakaran: Prakaran;
+  prakaran: Section;
 }
 
 export function PrakaranAccordion({ prakaran }: PrakaranAccordionProps) {
@@ -16,8 +16,7 @@ export function PrakaranAccordion({ prakaran }: PrakaranAccordionProps) {
   const { readings } = useReadingsByPrakaran(prakaran.index);
   const navigate = useNavigate();
   const { t, language } = useLanguage();
-  const currentReading = useAppStore((s) => s.currentReading);
-  const completedReadings = useAppStore((s) => s.completedReadings);
+  const { currentReading, completedReadings } = useActiveTrackProgress();
 
   const completedCount = readings.filter((r) => completedReadings.includes(r.id)).length;
   const prakaranName = language === 'gu' ? prakaran.nameGu : language === 'hi' ? prakaran.nameHi : prakaran.name;

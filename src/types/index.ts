@@ -1,3 +1,5 @@
+export type TrackId = 'vachanamrut' | 'gita';
+
 export interface DialogueExchange {
   speaker: string;
   type: 'question' | 'answer' | 'narrative';
@@ -31,6 +33,9 @@ export interface VachanamrutReading {
   quiz: QuizQuestion[];
   wordCount: number;
 }
+
+// Generic reading type alias (same shape as VachanamrutReading for now)
+export type Reading = VachanamrutReading;
 
 export type Language = 'en' | 'gu' | 'hi';
 
@@ -67,22 +72,45 @@ export interface UserSettings {
   showSetting: boolean;
 }
 
-export interface AppState {
+export interface TrackProgress {
   currentReading: number;
   completedReadings: number[];
   readingHistory: ReadingHistory;
+  quizResults: QuizResult[];
+}
+
+export interface AppState {
+  activeTrack: TrackId;
+  tracks: Partial<Record<TrackId, TrackProgress>>;
   streak: StreakData;
   settings: UserSettings;
   xp: number;
-  quizResults: QuizResult[];
   startDate: string | null;
 }
 
-export interface Prakaran {
+export interface Section {
   index: number;
   name: string;
   nameGu: string;
   nameHi: string;
+  totalItems: number;
+  range: [number, number];
+}
+
+// Backward compat alias
+export type Prakaran = Section & {
   totalVachanamruts: number;
   vachnoRange: [number, number];
+};
+
+export interface TrackDefinition {
+  id: TrackId;
+  name: string;
+  nameGu: string;
+  nameHi: string;
+  description: string;
+  sections: Section[];
+  totalReadings: number;
+  icon: string;
+  comingSoon?: boolean;
 }

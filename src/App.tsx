@@ -6,6 +6,7 @@ import { BrowsePage } from './pages/BrowsePage';
 import { ProgressPage } from './pages/ProgressPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { QuizPage } from './pages/QuizPage';
+import { AboutPage } from './pages/AboutPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/progress" element={<ProgressPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/quiz/:id" element={<QuizPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Route>
       </Routes>
     </HashRouter>

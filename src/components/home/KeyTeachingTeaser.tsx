@@ -1,10 +1,10 @@
 import { Card } from '../common/Card';
-import { useAppStore } from '../../store/useAppStore';
+import { useActiveTrackProgress } from '../../store/useAppStore';
 import { useReading } from '../../hooks/useReadings';
 import { useLanguage } from '../../hooks/useLanguage';
 
 export function KeyTeachingTeaser() {
-  const currentReading = useAppStore((s) => s.currentReading);
+  const { currentReading } = useActiveTrackProgress();
   const { reading } = useReading(currentReading);
   const { t } = useLanguage();
 

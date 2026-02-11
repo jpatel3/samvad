@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../common/Card';
 import { Button } from '../common/Button';
-import { useAppStore } from '../../store/useAppStore';
+import { useActiveTrackProgress } from '../../store/useAppStore';
 import { useReading } from '../../hooks/useReadings';
 import { useLanguage } from '../../hooks/useLanguage';
 import { estimateReadingTime } from '../../utils/readingTime';
@@ -9,8 +9,7 @@ import { estimateReadingTime } from '../../utils/readingTime';
 export function TodayCard() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const currentReading = useAppStore((s) => s.currentReading);
-  const completedReadings = useAppStore((s) => s.completedReadings);
+  const { currentReading, completedReadings } = useActiveTrackProgress();
   const { reading, loading } = useReading(currentReading);
 
   if (loading) {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
 import { useLanguage } from '../hooks/useLanguage';
 import { useTheme } from '../hooks/useTheme';
@@ -26,6 +27,7 @@ export function SettingsPage() {
   const setFontSize = useAppStore((s) => s.setFontSize);
   const resetProgress = useAppStore((s) => s.resetProgress);
   const [showResetModal, setShowResetModal] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="space-y-4">
@@ -119,15 +121,17 @@ export function SettingsPage() {
 
       {/* About */}
       <Card>
-        <p className="text-sm font-semibold text-text dark:text-text-dark mb-1">
-          {t.settings.about}
-        </p>
-        <p className="text-xs text-text-muted dark:text-text-muted-dark">
-          Ten Minute Vachanamrut v1.0.0
-        </p>
-        <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">
-          273 Vachanamruts across 10 Prakarans
-        </p>
+        <button
+          onClick={() => navigate('/about')}
+          className="w-full text-left"
+        >
+          <p className="text-sm font-semibold text-accent mb-1">
+            {t.settings.aboutSamvad}
+          </p>
+          <p className="text-xs text-text-muted dark:text-text-muted-dark">
+            Samvad v1.0.0
+          </p>
+        </button>
       </Card>
 
       {/* Reset Confirmation Modal */}

@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useReading, useReadings } from '../hooks/useReadings';
 import { useLanguage } from '../hooks/useLanguage';
-import { useAppStore } from '../store/useAppStore';
+import { useAppStore, useActiveTrackProgress } from '../store/useAppStore';
 import { ReadingContent } from '../components/reading/ReadingContent';
 import { NavigationControls } from '../components/reading/NavigationControls';
 import { ProgressBar } from '../components/reading/ProgressBar';
@@ -21,8 +21,7 @@ export function ReadingPage() {
   const { readings } = useReadings();
   const { t } = useLanguage();
   const language = useAppStore((s) => s.settings.language);
-  const currentReading = useAppStore((s) => s.currentReading);
-  const completedReadings = useAppStore((s) => s.completedReadings);
+  const { currentReading, completedReadings } = useActiveTrackProgress();
   const { formatted: countdown } = useMidnightTimer();
   const tts = useTextToSpeech();
 

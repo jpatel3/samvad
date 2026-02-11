@@ -1,6 +1,6 @@
 export const gu = {
   app: {
-    title: 'દસ મિનિટ વચનામૃત',
+    title: 'સંવાદ',
     subtitle: 'દૈનિક આધ્યાત્મિક વાંચન',
   },
   nav: {
@@ -69,14 +69,13 @@ export const gu = {
     currentStreak: 'વર્તમાન સ્ટ્રીક',
     longestStreak: 'સૌથી લાંબી સ્ટ્રીક',
     readingsCompleted: 'પૂર્ણ વાંચન',
-    prakaranProgress: 'પ્રકરણ પ્રગતિ',
+    prakaranProgress: 'વિભાગ પ્રગતિ',
     readingCalendar: 'વાંચન કૅલેન્ડર',
     milestones: 'માઇલસ્ટોન',
     dayMilestone: 'દિવસ માઇલસ્ટોન',
   },
   browse: {
-    title: 'વચનામૃત બ્રાઉઝ કરો',
-    vachanamruts: 'વચનામૃત',
+    title: 'બ્રાઉઝ',
     readings: 'વાંચન',
     locked: 'લૉક',
     completed: 'પૂર્ણ',
@@ -96,7 +95,17 @@ export const gu = {
     reset: 'રીસેટ',
     cancel: 'રદ કરો',
     about: 'વિશે',
+    aboutSamvad: 'સંવાદ વિશે',
     version: 'વર્ઝન',
+  },
+  tracks: {
+    vachanamrut: 'વચનામૃત',
+    gita: 'ભગવદ્ ગીતા',
+    comingSoon: 'જલ્દી આવશે',
+  },
+  about: {
+    title: 'સંવાદ વિશે',
+    subtitle: 'સંવાદ એ આધ્યાત્મિક સાધના',
   },
   xp: {
     level: 'લેવલ',

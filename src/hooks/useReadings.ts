@@ -1,36 +1,43 @@
 import { useState, useEffect } from 'react';
-import type { VachanamrutReading, Language } from '../types';
+import type { VachanamrutReading, Language, TrackId } from '../types';
 import { useAppStore } from '../store/useAppStore';
 
-const dataCache: Partial<Record<Language, VachanamrutReading[]>> = {};
+const dataCache: Partial<Record<string, VachanamrutReading[]>> = {};
 
-async function loadReadings(language: Language): Promise<VachanamrutReading[]> {
-  if (dataCache[language]) return dataCache[language]!;
+async function loadReadings(trackId: TrackId, language: Language): Promise<VachanamrutReading[]> {
+  const cacheKey = `${trackId}_${language}`;
+  if (dataCache[cacheKey]) return dataCache[cacheKey]!;
 
-  const modules: Record<Language, () => Promise<{ default: unknown[] }>> = {
-    en: () => import('../data/vachanamrut_en.json'),
-    gu: () => import('../data/vachanamrut_gu.json'),
-    hi: () => import('../data/vachanamrut_hi.json'),
-  };
+  if (trackId === 'vachanamrut') {
+    const modules: Record<Language, () => Promise<{ default: unknown[] }>> = {
+      en: () => import('../data/vachanamrut_en.json'),
+      gu: () => import('../data/vachanamrut_gu.json'),
+      hi: () => import('../data/vachanamrut_hi.json'),
+    };
 
-  const mod = await modules[language]();
-  const readings = mod.default as VachanamrutReading[];
-  dataCache[language] = readings;
-  return readings;
+    const mod = await modules[language]();
+    const readings = mod.default as VachanamrutReading[];
+    dataCache[cacheKey] = readings;
+    return readings;
+  }
+
+  // Future tracks (gita, etc.) will be loaded here
+  return [];
 }
 
 export function useReadings() {
   const language = useAppStore((s) => s.settings.language);
+  const activeTrack = useAppStore((s) => s.activeTrack);
   const [readings, setReadings] = useState<VachanamrutReading[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    loadReadings(language).then((data) => {
+    loadReadings(activeTrack, language).then((data) => {
       setReadings(data);
       setLoading(false);
     });
-  }, [language]);
+  }, [activeTrack, language]);
 
   return { readings, loading };
 }

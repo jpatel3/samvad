@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type {
   AppState,
+  TrackId,
+  TrackProgress,
   UserSettings,
   StreakData,
   ReadingHistory,
@@ -37,7 +39,19 @@ const initialSettings: UserSettings = {
   showSetting: true,
 };
 
+export const defaultTrackProgress: TrackProgress = {
+  currentReading: 1,
+  completedReadings: [],
+  readingHistory: {} as ReadingHistory,
+  quizResults: [],
+};
+
+function getTrackProgress(state: AppState & AppActions): TrackProgress {
+  return state.tracks[state.activeTrack] ?? defaultTrackProgress;
+}
+
 interface AppActions {
+  setActiveTrack: (trackId: TrackId) => void;
   markComplete: (readingId: number) => void;
   syncStreak: () => void;
   useStreakFreeze: () => boolean;
@@ -53,23 +67,28 @@ interface AppActions {
 export const useAppStore = create<AppState & AppActions>()(
   persist(
     (set, get) => ({
-      currentReading: 1,
-      completedReadings: [],
-      readingHistory: {} as ReadingHistory,
+      activeTrack: 'vachanamrut' as TrackId,
+      tracks: {
+        vachanamrut: { ...defaultTrackProgress },
+      },
       streak: initialStreak,
       settings: initialSettings,
       xp: 0,
-      quizResults: [],
       startDate: null,
+
+      setActiveTrack: (trackId: TrackId) => {
+        set({ activeTrack: trackId });
+      },
 
       markComplete: (readingId: number) => {
         const state = get();
-        if (state.completedReadings.includes(readingId)) return;
+        const track = getTrackProgress(state);
+        if (track.completedReadings.includes(readingId)) return;
 
         const today = getToday();
-        const newCompleted = [...state.completedReadings, readingId];
-        const newHistory = { ...state.readingHistory, [today]: readingId };
-        const newCurrent = Math.max(state.currentReading, readingId + 1);
+        const newCompleted = [...track.completedReadings, readingId];
+        const newHistory = { ...track.readingHistory, [today]: readingId };
+        const newCurrent = Math.max(track.currentReading, readingId + 1);
         const startDate = state.startDate || today;
 
         // Update streak
@@ -93,9 +112,15 @@ export const useAppStore = create<AppState & AppActions>()(
         if (streak.current === 30) xpGain += config.xp.streakBonus30;
 
         set({
-          completedReadings: newCompleted,
-          readingHistory: newHistory,
-          currentReading: newCurrent,
+          tracks: {
+            ...state.tracks,
+            [state.activeTrack]: {
+              currentReading: newCurrent,
+              completedReadings: newCompleted,
+              readingHistory: newHistory,
+              quizResults: track.quizResults,
+            },
+          },
           streak,
           xp: state.xp + xpGain,
           startDate,
@@ -141,10 +166,18 @@ export const useAppStore = create<AppState & AppActions>()(
       },
 
       addQuizResult: (result: QuizResult) => {
-        set((state) => ({
-          quizResults: [...state.quizResults, result],
+        const state = get();
+        const track = getTrackProgress(state);
+        set({
+          tracks: {
+            ...state.tracks,
+            [state.activeTrack]: {
+              ...track,
+              quizResults: [...track.quizResults, result],
+            },
+          },
           xp: state.xp + result.xpEarned,
-        }));
+        });
       },
 
       updateSettings: (newSettings: Partial<UserSettings>) => {
@@ -173,18 +206,81 @@ export const useAppStore = create<AppState & AppActions>()(
 
       resetProgress: () => {
         set({
-          currentReading: 1,
-          completedReadings: [],
-          readingHistory: {},
+          tracks: {
+            vachanamrut: { ...defaultTrackProgress },
+          },
           streak: initialStreak,
           xp: 0,
-          quizResults: [],
           startDate: null,
         });
       },
     }),
     {
-      name: 'vachanamrut-store',
+      name: 'samvad-store',
+      migrate: (persisted: unknown) => {
+        const state = persisted as Record<string, unknown>;
+        // Migrate from old flat shape (vachanamrut-store) to new tracks shape
+        if (state && 'currentReading' in state && !('tracks' in state)) {
+          return {
+            activeTrack: 'vachanamrut' as TrackId,
+            tracks: {
+              vachanamrut: {
+                currentReading: state.currentReading as number,
+                completedReadings: state.completedReadings as number[],
+                readingHistory: state.readingHistory as ReadingHistory,
+                quizResults: state.quizResults as QuizResult[],
+              },
+            },
+            streak: state.streak as StreakData,
+            settings: state.settings as UserSettings,
+            xp: state.xp as number,
+            startDate: state.startDate as string | null,
+          } as unknown as AppState & AppActions;
+        }
+        return state as unknown as AppState & AppActions;
+      },
+      version: 1,
     }
   )
 );
+
+// Migrate data from old 'vachanamrut-store' key if present
+(function migrateOldStoreKey() {
+  try {
+    const oldData = localStorage.getItem('vachanamrut-store');
+    const newData = localStorage.getItem('samvad-store');
+    if (oldData && !newData) {
+      const parsed = JSON.parse(oldData);
+      // Transform old flat state into new shape
+      if (parsed.state && 'currentReading' in parsed.state) {
+        const old = parsed.state;
+        const migrated = {
+          state: {
+            activeTrack: 'vachanamrut',
+            tracks: {
+              vachanamrut: {
+                currentReading: old.currentReading ?? 1,
+                completedReadings: old.completedReadings ?? [],
+                readingHistory: old.readingHistory ?? {},
+                quizResults: old.quizResults ?? [],
+              },
+            },
+            streak: old.streak ?? initialStreak,
+            settings: old.settings ?? initialSettings,
+            xp: old.xp ?? 0,
+            startDate: old.startDate ?? null,
+          },
+          version: 1,
+        };
+        localStorage.setItem('samvad-store', JSON.stringify(migrated));
+      }
+    }
+  } catch {
+    // Ignore migration errors
+  }
+})();
+
+// Helper hook: get active track's progress
+export function useActiveTrackProgress(): TrackProgress {
+  return useAppStore((s) => s.tracks[s.activeTrack] ?? defaultTrackProgress);
+}

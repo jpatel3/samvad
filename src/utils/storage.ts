@@ -1,4 +1,4 @@
-const STORAGE_PREFIX = 'vachanamrut_';
+const STORAGE_PREFIX = 'samvad_';
 
 export function getStorageItem<T>(key: string, defaultValue: T): T {
   try {

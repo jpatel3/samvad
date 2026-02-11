@@ -1,14 +1,16 @@
 import { useMemo } from 'react';
 import { useAppStore } from '../store/useAppStore';
+import { useActiveTrackProgress } from '../store/useAppStore';
 import { useReadings } from './useReadings';
-import { prakarans } from '../constants/prakarans';
+import { getTrack } from '../constants/tracks';
 
 export function useProgress() {
-  const completedReadings = useAppStore((s) => s.completedReadings);
-  const readingHistory = useAppStore((s) => s.readingHistory);
+  const activeTrack = useAppStore((s) => s.activeTrack);
+  const trackProgress = useActiveTrackProgress();
   const xp = useAppStore((s) => s.xp);
-  const quizResults = useAppStore((s) => s.quizResults);
   const { readings } = useReadings();
+
+  const { completedReadings, readingHistory, quizResults } = trackProgress;
 
   const stats = useMemo(() => {
     const totalReadings = readings.length;
@@ -37,20 +39,23 @@ export function useProgress() {
     };
   }, [completedReadings, readingHistory, xp, quizResults, readings]);
 
-  const prakaranStats = useMemo(() => {
-    return prakarans.map((p) => {
-      const prakaranReadings = readings.filter((r) => r.prakaranIndex === p.index);
-      const completed = prakaranReadings.filter((r) =>
+  const track = getTrack(activeTrack);
+  const sections = track?.sections ?? [];
+
+  const sectionStats = useMemo(() => {
+    return sections.map((p) => {
+      const sectionReadings = readings.filter((r) => r.prakaranIndex === p.index);
+      const completed = sectionReadings.filter((r) =>
         completedReadings.includes(r.id)
       ).length;
       return {
         ...p,
-        totalReadings: prakaranReadings.length,
+        totalReadings: sectionReadings.length,
         completedReadings: completed,
-        isComplete: completed === prakaranReadings.length && prakaranReadings.length > 0,
+        isComplete: completed === sectionReadings.length && sectionReadings.length > 0,
       };
     });
-  }, [readings, completedReadings]);
+  }, [readings, completedReadings, sections]);
 
-  return { stats, prakaranStats };
+  return { stats, prakaranStats: sectionStats };
 }

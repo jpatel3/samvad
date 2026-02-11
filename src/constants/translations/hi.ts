@@ -1,6 +1,6 @@
 export const hi = {
   app: {
-    title: 'दस मिनट वचनामृत',
+    title: 'संवाद',
     subtitle: 'दैनिक आध्यात्मिक पठन',
   },
   nav: {
@@ -69,14 +69,13 @@ export const hi = {
     currentStreak: 'वर्तमान स्ट्रीक',
     longestStreak: 'सबसे लंबी स्ट्रीक',
     readingsCompleted: 'पूर्ण पठन',
-    prakaranProgress: 'प्रकरण प्रगति',
+    prakaranProgress: 'विभाग प्रगति',
     readingCalendar: 'पठन कैलेंडर',
     milestones: 'माइलस्टोन',
     dayMilestone: 'दिन माइलस्टोन',
   },
   browse: {
-    title: 'वचनामृत ब्राउज़ करें',
-    vachanamruts: 'वचनामृत',
+    title: 'ब्राउज़',
     readings: 'पठन',
     locked: 'लॉक',
     completed: 'पूर्ण',
@@ -96,7 +95,17 @@ export const hi = {
     reset: 'रीसेट',
     cancel: 'रद्द करें',
     about: 'के बारे में',
+    aboutSamvad: 'संवाद के बारे में',
     version: 'वर्ज़न',
+  },
+  tracks: {
+    vachanamrut: 'वचनामृत',
+    gita: 'भगवद् गीता',
+    comingSoon: 'जल्द आ रहा है',
+  },
+  about: {
+    title: 'संवाद के बारे में',
+    subtitle: 'संवाद एक आध्यात्मिक साधना',
   },
   xp: {
     level: 'लेवल',
