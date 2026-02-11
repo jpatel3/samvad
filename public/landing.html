@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ten Minute Vachanamrut - Daily Spiritual Reading</title>
+  <meta name="description" content="Read through all 273 Vachanamruts in just 10 minutes a day. Track your streak, take quizzes, and deepen your spiritual understanding." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #D4763C;
+      --accent-glow: rgba(212, 118, 60, 0.3);
+      --accent-subtle: rgba(212, 118, 60, 0.08);
+      --accent-border: rgba(212, 118, 60, 0.2);
+      --bg: #0F0F0F;
+      --surface: #161616;
+      --surface-hover: #1C1C1C;
+      --text: #F5F5F5;
+      --text-muted: #9CA3AF;
+      --text-dim: #6B7280;
+      --border: #222222;
+      --border-light: #2D2D2D;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Grain texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(3deg); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+
+    @keyframes scroll-hint {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(8px); opacity: 1; }
+    }
+
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ==================== NAVBAR ==================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(15, 15, 15, 0.8);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    .navbar.scrolled {
+      border-bottom-color: var(--border);
+      background: rgba(15, 15, 15, 0.95);
+    }
+
+    .navbar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), #E89A6A);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: white;
+      font-weight: 800;
+    }
+
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      background: var(--accent);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+      text-align: center;
+      padding: 140px 0 80px;
+      position: relative;
+      overflow: visible;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(212, 118, 60, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+
+    .hero-float {
+      position: absolute;
+      top: 100px;
+      right: 10%;
+      font-size: 80px;
+      opacity: 0.06;
+      animation: float 6s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-float-left {
+      position: absolute;
+      top: 200px;
+      left: 5%;
+      font-size: 60px;
+      opacity: 0.04;
+      animation: float 8s ease-in-out infinite 2s;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 100px;
+      background: var(--accent-subtle);
+      border: 1px solid var(--accent-border);
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 32px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--text) 0%, #E89A6A 50%, var(--accent) 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeUp 0.8s ease 0.15s both, gradient-shift 8s ease infinite;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-subtitle {
+      font-size: 20px;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 40px;
+      animation: fadeUp 0.8s ease 0.3s both;
+      line-height: 1.6;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s ease 0.45s both;
+    }
+
+    .cta-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: var(--accent);
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px var(--accent-glow);
+    }
+
+    .cta-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px var(--accent-glow);
+    }
+
+    .cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 28px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 16px;
+      font-weight: 500;
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .cta-secondary:hover {
+      border-color: var(--accent-border);
+      color: var(--text);
+    }
+
+    .scroll-hint {
+      margin-top: 60px;
+      animation: scroll-hint 2s ease-in-out infinite, fadeUp 0.8s ease 0.6s both;
+      color: var(--text-dim);
+      font-size: 24px;
+    }
+
+    /* ==================== STATS BAR ==================== */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 0 auto;
+      max-width: 800px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 28px 16px;
+      background: var(--surface);
+    }
+
+    .stat-item:first-child { border-radius: 20px 0 0 20px; }
+    .stat-item:last-child { border-radius: 0 20px 20px 0; }
+
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* ==================== APP PREVIEW ==================== */
+    .app-preview {
+      padding: 80px 0;
+    }
+
+    .app-preview-heading {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .app-preview-heading h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .app-preview-heading p {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .phone-frames {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      align-items: flex-start;
+    }
+
+    .phone-frame {
+      width: 280px;
+      flex-shrink: 0;
+      background: #000;
+      border-radius: 40px;
+      padding: 12px;
+      border: 2px solid #333;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+      position: relative;
+    }
+
+    .phone-notch {
+      width: 120px;
+      height: 28px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+
+    .phone-screen {
+      width: 100%;
+      aspect-ratio: 9/19.5;
+      background: #1A1A1A;
+      border-radius: 30px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .phone-screen-content {
+      width: 100%;
+      height: 100%;
+      padding: 40px 16px 16px;
+      overflow: hidden;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .mock-header {
+      margin-bottom: 12px;
+    }
+
+    .mock-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      background: rgba(212, 118, 60, 0.15);
+      color: var(--accent);
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .mock-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .mock-dialogue {
+      padding: 8px 0;
+      border-left: 2px solid var(--accent);
+      padding-left: 10px;
+      margin-bottom: 8px;
+    }
+
+    .mock-speaker {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+
+    .mock-text {
+      font-size: 10px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .mock-quiz-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .mock-quiz-q {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .mock-quiz-option {
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .mock-quiz-option.correct {
+      border-color: #4CAF50;
+      background: rgba(76, 175, 80, 0.1);
+      color: #4CAF50;
+    }
+
+    .phone-label {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* ==================== FEATURES ==================== */
+    .features {
+      padding: 80px 0;
+    }
+
+    .features-heading {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .features-heading h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .features-heading p {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      padding: 28px;
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 1px;
+      background: linear-gradient(135deg, transparent, transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      transition: background 0.3s ease;
+      pointer-events: none;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-border);
+      box-shadow: 0 8px 32px rgba(212, 118, 60, 0.08);
+    }
+
+    .feature-card:hover::before {
+      background: linear-gradient(135deg, var(--accent-border), transparent);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--accent-subtle);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ==================== HOW IT WORKS ==================== */
+    .how-it-works {
+      padding: 80px 0;
+    }
+
+    .how-heading {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .how-heading h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .how-heading p {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .steps-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .step {
+      flex: 1;
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--accent), #E89A6A);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+      margin: 0 auto 16px;
+    }
+
+    .step-connector {
+      position: absolute;
+      top: 28px;
+      left: calc(50% + 38px);
+      width: calc(100% - 76px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-border), var(--border));
+    }
+
+    .step:last-child .step-connector { display: none; }
+
+    .step h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ==================== QUOTE / TESTIMONIAL ==================== */
+    .quote-section {
+      padding: 80px 0;
+    }
+
+    .quote-card {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 48px 40px;
+      background: linear-gradient(135deg, rgba(212, 118, 60, 0.05), rgba(212, 118, 60, 0.02));
+      border: 1px solid var(--accent-border);
+      border-radius: 24px;
+      position: relative;
+    }
+
+    .quote-mark {
+      font-size: 80px;
+      color: var(--accent);
+      opacity: 0.15;
+      line-height: 1;
+      position: absolute;
+      top: 16px;
+      left: 32px;
+      font-family: Georgia, serif;
+    }
+
+    .quote-mark-end {
+      top: auto;
+      left: auto;
+      bottom: 16px;
+      right: 32px;
+    }
+
+    .quote-text {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.7;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .quote-source {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ==================== LANGUAGES ==================== */
+    .languages-section {
+      padding: 80px 0;
+    }
+
+    .lang-heading {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .lang-heading h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .lang-heading p {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .lang-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .lang-card {
+      text-align: center;
+      padding: 32px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      transition: border-color 0.3s;
+      cursor: default;
+    }
+
+    .lang-card:hover {
+      border-color: var(--accent-border);
+    }
+
+    .lang-script {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.4;
+      color: var(--text);
+    }
+
+    .lang-pill {
+      display: inline-block;
+      padding: 6px 16px;
+      background: var(--accent-subtle);
+      border: 1px solid var(--accent-border);
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* ==================== BOTTOM CTA ==================== */
+    .bottom-cta {
+      text-align: center;
+      padding: 80px 0;
+    }
+
+    .bottom-cta h2 {
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .bottom-cta p {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      font-size: 16px;
+    }
+
+    .bottom-cta-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ==================== FOOTER ==================== */
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer p {
+      color: var(--text-dim);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .footer a:hover {
+      opacity: 0.8;
+    }
+
+    .footer-closing {
+      margin-top: 16px;
+      font-size: 15px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+      .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+        border-radius: 16px;
+      }
+      .stat-item:first-child { border-radius: 16px 0 0 0; }
+      .stat-item:nth-child(2) { border-radius: 0 16px 0 0; }
+      .stat-item:nth-child(3) { border-radius: 0 0 0 16px; }
+      .stat-item:last-child { border-radius: 0 0 16px 0; }
+
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .phone-frames { flex-direction: column; align-items: center; gap: 32px; }
+      .phone-frame { width: 260px; }
+
+      .steps-row { flex-direction: column; gap: 32px; }
+      .step-connector { display: none; }
+
+      .lang-cards { grid-template-columns: 1fr; max-width: 320px; }
+
+      .hero { padding: 120px 0 60px; }
+      .hero-float { display: none; }
+      .hero-float-left { display: none; }
+      .features, .how-it-works, .quote-section, .languages-section, .app-preview, .bottom-cta { padding: 60px 0; }
+    }
+
+    @media (max-width: 380px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2.2rem; }
+      .hero-subtitle { font-size: 16px; }
+      .hero-cta-group { flex-direction: column; }
+      .cta-primary, .cta-secondary { width: 100%; justify-content: center; }
+      .quote-card { padding: 32px 20px; }
+      .quote-text { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-icon">V</div>
+        <span>Ten Minute Vachanamrut</span>
+      </a>
+      <a href="#/" class="nav-pill">
+        Open App
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero-glow"></div>
+      <div class="hero-float" aria-hidden="true">&#x0950;</div>
+      <div class="hero-float-left" aria-hidden="true">&#x0950;</div>
+
+      <div class="hero-badge">Jai Swaminarayan</div>
+
+      <h1>Ten Minute<br />Vachanamrut</h1>
+
+      <p class="hero-subtitle">
+        Read through all 273 Vachanamruts of Bhagwan Swaminarayan in just 10 minutes a day. Build a daily sadhana with quizzes, streaks, and progress tracking.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="#/" class="cta-primary">
+          Start Reading
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="#download" class="cta-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18V6"/><path d="m5 12 7 7 7-7"/><path d="M19 21H5"/></svg>
+          Download App
+        </a>
+      </div>
+
+      <div class="scroll-hint" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+      </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="animate-on-scroll" id="stats-section">
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-value" data-target="10">0</div>
+          <div class="stat-label">Prakarans</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" data-target="273">0</div>
+          <div class="stat-label">Discourses</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" data-target="330" data-prefix="~">0</div>
+          <div class="stat-label">Daily Readings</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" data-target="10">0</div>
+          <div class="stat-label">Min / Day</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- App Preview -->
+    <section class="app-preview animate-on-scroll">
+      <div class="app-preview-heading">
+        <h2>See It in Action</h2>
+        <p>A distraction-free reading experience with interactive quizzes</p>
+      </div>
+      <div class="phone-frames">
+        <!-- Reading Phone -->
+        <div>
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-screen-content">
+                <div class="mock-header">
+                  <div class="mock-badge">Gadhada I</div>
+                  <div class="mock-title">The Nature of Maya</div>
+                </div>
+                <div class="mock-dialogue">
+                  <div class="mock-speaker">Shriji Maharaj</div>
+                  <div class="mock-text">In the Satsang assembly, Shriji Maharaj said: "One who has firmly realized the greatness of God never perceives flaws in a great Sadhu..."</div>
+                </div>
+                <div class="mock-dialogue">
+                  <div class="mock-speaker">Muktanand Swami</div>
+                  <div class="mock-text">"Maharaj, what is the nature of maya, and how can a devotee overcome its influence?"</div>
+                </div>
+                <div class="mock-dialogue">
+                  <div class="mock-speaker">Shriji Maharaj</div>
+                  <div class="mock-text">"Maya is the ignorance that causes one to identify the self with the body..."</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-label">Reading</div>
+        </div>
+
+        <!-- Quiz Phone -->
+        <div>
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-screen-content">
+                <div class="mock-header">
+                  <div class="mock-badge">Quiz</div>
+                  <div class="mock-title" style="font-size: 12px;">Test Your Understanding</div>
+                </div>
+                <div class="mock-quiz-card">
+                  <div class="mock-quiz-q">According to Maharaj, what is the primary nature of maya?</div>
+                  <div class="mock-quiz-option">The material world</div>
+                  <div class="mock-quiz-option correct">Ignorance causing body-identification</div>
+                  <div class="mock-quiz-option">Attachment to wealth</div>
+                  <div class="mock-quiz-option">Worldly desires</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                  <span style="font-size: 10px; color: var(--accent);">+10 XP</span>
+                  <span style="font-size: 10px; color: #4CAF50;">1/3 Correct</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-label">Quiz</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="features" id="features">
+      <div class="features-heading animate-on-scroll">
+        <h2>Build a Daily Sadhana</h2>
+        <p>Everything you need for a consistent spiritual practice</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon">&#x1F4D6;</div>
+          <h3>Daily Sadhana</h3>
+          <p>Structured 10-minute readings guide you through the entire Vachanamrut, one discourse at a time, every day.</p>
+        </div>
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon">&#x1F30D;</div>
+          <h3>Trilingual</h3>
+          <p>Read in English, Gujarati, or Hindi. Switch languages anytime to deepen your understanding.</p>
+        </div>
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon">&#x1F4DD;</div>
+          <h3>Quiz Yourself</h3>
+          <p>Test your understanding with True/False and MCQ questions after each reading. Earn XP for correct answers.</p>
+        </div>
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon">&#x1F525;</div>
+          <h3>Streak Tracking</h3>
+          <p>Build daily habits with streak tracking, streak freezes, and milestone celebrations along your journey.</p>
+        </div>
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon">&#x1F4CA;</div>
+          <h3>Track Progress</h3>
+          <p>Visualize your journey with a reading calendar, prakaran progress bars, and XP milestones.</p>
+        </div>
+        <div class="feature-card animate-on-scroll">
+          <div class="feature-icon">&#x1F50A;</div>
+          <h3>Listen Along</h3>
+          <p>Play any discourse aloud with text-to-speech. Follow along as each dialogue exchange is highlighted in real time.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works animate-on-scroll" id="how">
+      <div class="how-heading">
+        <h2>How It Works</h2>
+        <p>Three simple steps to a daily spiritual practice</p>
+      </div>
+      <div class="steps-row">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-connector"></div>
+          <h3>Read</h3>
+          <p>Open today's Vachanamrut and read through the dialogue between Maharaj and the paramhansas.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-connector"></div>
+          <h3>Quiz</h3>
+          <p>Answer questions to test your understanding and reinforce the key teachings from the reading.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Track</h3>
+          <p>Build your streak, earn XP, and watch your progress grow across all 10 prakarans.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote -->
+    <section class="quote-section animate-on-scroll">
+      <div class="quote-card">
+        <div class="quote-mark" aria-hidden="true">&ldquo;</div>
+        <div class="quote-mark quote-mark-end" aria-hidden="true">&rdquo;</div>
+        <p class="quote-text">
+          One who has firmly realized the greatness of God and the Sant never perceives flaws in them. Even if he does happen to see some, he would think, 'This must be for some greater purpose which I do not understand.'
+        </p>
+        <p class="quote-source">Gadhada I-1 &mdash; Shriji Maharaj</p>
+      </div>
+    </section>
+
+    <!-- Languages -->
+    <section class="languages-section animate-on-scroll" id="languages">
+      <div class="lang-heading">
+        <h2>Three Languages</h2>
+        <p>Read the Vachanamrut in the language that speaks to your soul</p>
+      </div>
+      <div class="lang-cards">
+        <div class="lang-card">
+          <div class="lang-script">The Nature of<br />Maya</div>
+          <div class="lang-pill">English</div>
+        </div>
+        <div class="lang-card">
+          <div class="lang-script">&#x0AAE;&#x0ABE;&#x0AAF;&#x0ABE;&#x0AA8;&#x0AC1;&#x0A82;<br />&#x0AB8;&#x0ACD;&#x0AB5;&#x0AB0;&#x0AC2;&#x0AAA;</div>
+          <div class="lang-pill">&#x0A97;&#x0AC1;&#x0A9C;&#x0AB0;&#x0ABE;&#x0AA4;&#x0AC0;</div>
+        </div>
+        <div class="lang-card">
+          <div class="lang-script">&#x092E;&#x093E;&#x092F;&#x093E; &#x0915;&#x093E;<br />&#x0938;&#x094D;&#x0935;&#x0930;&#x0942;&#x092A;</div>
+          <div class="lang-pill">&#x0939;&#x093F;&#x0928;&#x094D;&#x0926;&#x0940;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="bottom-cta animate-on-scroll" id="download">
+      <h2>Begin Your Journey</h2>
+      <p>Start reading the Vachanamrut today. Ten minutes is all it takes.</p>
+      <div class="bottom-cta-buttons">
+        <a href="#/" class="cta-primary">
+          Start Reading
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>Built with devotion. Inspired by <a href="https://github.com/AM1403x/ten-minute-gita" target="_blank" rel="noopener">Ten Minute Gita</a>.</p>
+      <p class="footer-closing">Jai Swaminarayan</p>
+    </div>
+  </footer>
+
+  <!-- Vanilla JS: Intersection Observer + Count-up + Navbar scroll -->
+  <script>
+    (function() {
+      // Intersection Observer for fade-in animations
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+
+            // Trigger count-up for stat values
+            var stats = entry.target.querySelectorAll('[data-target]');
+            stats.forEach(function(stat) {
+              if (stat.dataset.counted) return;
+              stat.dataset.counted = 'true';
+              countUp(stat);
+            });
+          }
+        });
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll('.animate-on-scroll').forEach(function(el) {
+        observer.observe(el);
+      });
+
+      // Count-up animation
+      function countUp(el) {
+        var target = parseInt(el.dataset.target, 10);
+        var prefix = el.dataset.prefix || '';
+        var duration = 1500;
+        var start = performance.now();
+
+        function update(now) {
+          var elapsed = now - start;
+          var progress = Math.min(elapsed / duration, 1);
+          // Ease out cubic
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var current = Math.round(eased * target);
+          el.textContent = prefix + current;
+          if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+      }
+
+      // Navbar scroll effect
+      var navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 20) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          var href = this.getAttribute('href');
+          if (href.startsWith('#/') || href === '#') return; // Let hash router handle these
+          var target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
