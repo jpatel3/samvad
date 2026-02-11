@@ -877,7 +877,7 @@
         <div class="nav-logo-icon">V</div>
         <span>Ten Minute Vachanamrut</span>
       </a>
-      <a href="#/" class="nav-pill">
+      <a href="/vachanamrut/#/" class="nav-pill">
         Open App
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
       </a>
@@ -901,7 +901,7 @@
       </p>
 
       <div class="hero-cta-group">
-        <a href="#/" class="cta-primary">
+        <a href="/vachanamrut/#/" class="cta-primary">
           Start Reading
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>
@@ -1108,7 +1108,7 @@
       <h2>Begin Your Journey</h2>
       <p>Start reading the Vachanamrut today. Ten minutes is all it takes.</p>
       <div class="bottom-cta-buttons">
-        <a href="#/" class="cta-primary">
+        <a href="/vachanamrut/#/" class="cta-primary">
           Start Reading
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>
@@ -1181,7 +1181,7 @@
       document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
         anchor.addEventListener('click', function(e) {
           var href = this.getAttribute('href');
-          if (href.startsWith('#/') || href === '#') return; // Let hash router handle these
+          if (href.includes('/#/') || href === '#') return; // Let SPA links navigate normally
           var target = document.querySelector(href);
           if (target) {
             e.preventDefault();
