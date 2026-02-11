@@ -6,8 +6,11 @@ interface SpeakerBadgeProps {
 }
 
 function isMaharaj(speaker: string): boolean {
-  const maharajNames = ['Shriji Maharaj', 'શ્રીજી મહારાજ', 'श्रीजी महाराज', 'Bhagwan Swaminarayan'];
-  return maharajNames.some((n) => speaker.includes(n));
+  const primarySpeakers = [
+    'Shriji Maharaj', 'શ્રીજી મહારાજ', 'श्रीजी महाराज', 'Bhagwan Swaminarayan',
+    'Krishna', 'કૃષ્ણ', 'कृष्ण', 'Shri Krishna', 'શ્રી કૃષ્ણ', 'श्री कृष्ण',
+  ];
+  return primarySpeakers.some((n) => speaker.includes(n));
 }
 
 export function SpeakerBadge({ speaker, type }: SpeakerBadgeProps) {

@@ -21,7 +21,19 @@ async function loadReadings(trackId: TrackId, language: Language): Promise<Vacha
     return readings;
   }
 
-  // Future tracks (gita, etc.) will be loaded here
+  if (trackId === 'gita') {
+    const modules: Record<Language, () => Promise<{ default: unknown[] }>> = {
+      en: () => import('../data/gita_en.json'),
+      gu: () => import('../data/gita_gu.json'),
+      hi: () => import('../data/gita_hi.json'),
+    };
+
+    const mod = await modules[language]();
+    const readings = mod.default as VachanamrutReading[];
+    dataCache[cacheKey] = readings;
+    return readings;
+  }
+
   return [];
 }
 

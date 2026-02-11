@@ -1,5 +1,6 @@
 import type { TrackDefinition, TrackId, Section } from '../types';
 import { prakarans } from './prakarans';
+import { gitaChapters } from './gitaChapters';
 
 const vachanamrutSections: Section[] = prakarans.map((p) => ({
   index: p.index,
@@ -27,10 +28,9 @@ export const TRACKS: TrackDefinition[] = [
     nameGu: 'ભગવદ્ ગીતા',
     nameHi: 'भगवद् गीता',
     description: 'The divine dialogue between Krishna and Arjuna',
-    sections: [],
-    totalReadings: 0,
+    sections: gitaChapters,
+    totalReadings: 71,
     icon: '🙏',
-    comingSoon: true,
   },
 ];
 
