@@ -3,6 +3,7 @@ import { TrackSelector } from '../components/home/TrackSelector';
 import { TodayCard } from '../components/home/TodayCard';
 import { StreakIndicator } from '../components/home/StreakIndicator';
 import { KeyTeachingTeaser } from '../components/home/KeyTeachingTeaser';
+import { AppDownloadBanner } from '../components/home/AppDownloadBanner';
 
 export function HomePage() {
   return (
@@ -12,6 +13,7 @@ export function HomePage() {
       <StreakIndicator />
       <TodayCard />
       <KeyTeachingTeaser />
+      <AppDownloadBanner />
     </div>
   );
 }

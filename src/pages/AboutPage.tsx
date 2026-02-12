@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/common/Card';
 import { useLanguage } from '../hooks/useLanguage';
+import { AppDownloadBanner } from '../components/home/AppDownloadBanner';
 
 export function AboutPage() {
   const navigate = useNavigate();
@@ -102,6 +103,8 @@ export function AboutPage() {
           </div>
         </div>
       </Card>
+
+      <AppDownloadBanner />
 
       <div className="text-center py-4">
         <p className="text-sm text-text-muted dark:text-text-muted-dark italic">
