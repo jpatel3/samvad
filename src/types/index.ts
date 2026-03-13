@@ -1,4 +1,4 @@
-export type TrackId = 'vachanamrut' | 'gita';
+export type TrackId = 'vachanamrut' | 'gita' | 'upanishad';
 
 export interface DialogueExchange {
   speaker: string;

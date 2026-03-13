@@ -34,6 +34,19 @@ async function loadReadings(trackId: TrackId, language: Language): Promise<Vacha
     return readings;
   }
 
+  if (trackId === 'upanishad') {
+    const modules: Record<Language, () => Promise<{ default: unknown[] }>> = {
+      en: () => import('../data/upanishad_en.json'),
+      gu: () => import('../data/upanishad_gu.json'),
+      hi: () => import('../data/upanishad_hi.json'),
+    };
+
+    const mod = await modules[language]();
+    const readings = mod.default as VachanamrutReading[];
+    dataCache[cacheKey] = readings;
+    return readings;
+  }
+
   return [];
 }
 

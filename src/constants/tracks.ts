@@ -1,6 +1,7 @@
 import type { TrackDefinition, TrackId, Section } from '../types';
 import { prakarans } from './prakarans';
 import { gitaChapters } from './gitaChapters';
+import { upanishadSections } from './upanishadSections';
 
 const vachanamrutSections: Section[] = prakarans.map((p) => ({
   index: p.index,
@@ -31,6 +32,16 @@ export const TRACKS: TrackDefinition[] = [
     sections: gitaChapters,
     totalReadings: 71,
     icon: '🙏',
+  },
+  {
+    id: 'upanishad',
+    name: 'Upanishads',
+    nameGu: 'ઉપનિષદ',
+    nameHi: 'उपनिषद',
+    description: 'The ancient wisdom teachings of the Vedas',
+    sections: upanishadSections,
+    totalReadings: 48,
+    icon: '🕉️',
   },
 ];
 

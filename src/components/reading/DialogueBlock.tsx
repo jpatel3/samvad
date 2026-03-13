@@ -7,6 +7,7 @@ interface DialogueBlockProps {
   exchange: DialogueExchange;
   isLast: boolean;
   isActive?: boolean;
+  onSpeakerClick?: (speaker: string) => void;
 }
 
 const fontSizeClasses = {
@@ -15,7 +16,7 @@ const fontSizeClasses = {
   large: 'text-lg leading-loose',
 };
 
-export function DialogueBlock({ exchange, isLast, isActive }: DialogueBlockProps) {
+export function DialogueBlock({ exchange, isLast, isActive, onSpeakerClick }: DialogueBlockProps) {
   const fontSize = useAppStore((s) => s.settings.fontSize);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -51,7 +52,11 @@ export function DialogueBlock({ exchange, isLast, isActive }: DialogueBlockProps
             : ''
         } ${isActive ? 'bg-accent/5 dark:bg-accent/10 rounded-lg p-3 -ml-1' : ''}`}
       >
-        <SpeakerBadge speaker={exchange.speaker} type={exchange.type} />
+        <SpeakerBadge
+          speaker={exchange.speaker}
+          type={exchange.type}
+          onSpeakerClick={onSpeakerClick ? () => onSpeakerClick(exchange.speaker) : undefined}
+        />
         <div
           className={`text-text dark:text-text-dark ${fontSizeClasses[fontSize]} mt-1 whitespace-pre-wrap`}
         >

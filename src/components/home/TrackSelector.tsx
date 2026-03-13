@@ -1,6 +1,7 @@
 import { useAppStore } from '../../store/useAppStore';
 import { useLanguage } from '../../hooks/useLanguage';
 import { TRACKS } from '../../constants/tracks';
+import { TrackIcon } from '../decorative/TrackIcon';
 import type { TrackId, Language } from '../../types';
 
 function getTrackName(track: typeof TRACKS[number], language: Language): string {
@@ -33,7 +34,11 @@ export function TrackSelector() {
                 : 'bg-gray-100 dark:bg-gray-800 text-text dark:text-text-dark hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
-            <span>{track.icon}</span>
+            <TrackIcon
+              trackId={track.id}
+              size={18}
+              color={isActive ? '#FFFFFF' : undefined}
+            />
             <span>{getTrackName(track, language)}</span>
             {track.comingSoon && (
               <span className="text-[10px] bg-gray-200 dark:bg-gray-700 text-text-muted dark:text-text-muted-dark px-1.5 py-0.5 rounded-full">

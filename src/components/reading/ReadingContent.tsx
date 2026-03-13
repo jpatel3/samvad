@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import type { VachanamrutReading } from '../../types';
 import { DialogueBlock } from './DialogueBlock';
+import { CharacterBioModal } from './CharacterBioModal';
+import { getCharacterBio, type CharacterBio } from '../../constants/characterBios';
 import { useAppStore } from '../../store/useAppStore';
 import { useLanguage } from '../../hooks/useLanguage';
 
@@ -11,6 +14,16 @@ interface ReadingContentProps {
 export function ReadingContent({ reading, activeExchangeIndex = -1 }: ReadingContentProps) {
   const showSetting = useAppStore((s) => s.settings.showSetting);
   const { t } = useLanguage();
+  const [selectedBio, setSelectedBio] = useState<CharacterBio | null>(null);
+  const [showBioModal, setShowBioModal] = useState(false);
+
+  const handleSpeakerClick = (speaker: string) => {
+    const bio = getCharacterBio(speaker);
+    if (bio) {
+      setSelectedBio(bio);
+      setShowBioModal(true);
+    }
+  };
 
   return (
     <div className="scroll-parchment relative rounded-xl overflow-hidden">
@@ -51,6 +64,7 @@ export function ReadingContent({ reading, activeExchangeIndex = -1 }: ReadingCon
               exchange={exchange}
               isLast={index === reading.dialogue.length - 1}
               isActive={index === activeExchangeIndex}
+              onSpeakerClick={handleSpeakerClick}
             />
           ))}
         </div>
@@ -68,6 +82,12 @@ export function ReadingContent({ reading, activeExchangeIndex = -1 }: ReadingCon
 
       {/* Decorative bottom border */}
       <div className="relative h-1 bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+
+      <CharacterBioModal
+        bio={selectedBio}
+        isOpen={showBioModal}
+        onClose={() => setShowBioModal(false)}
+      />
     </div>
   );
 }
