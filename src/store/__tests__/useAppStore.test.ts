@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import type { StreakData, ReadingHistory, QuizResult, UserSettings, TrackId } from '../../types';
+import type { ReadingHistory, QuizResult, UserSettings, TrackId } from '../../types';
 
 // Mock config to avoid import.meta.env issues in test
 vi.mock('../../constants/config', () => ({
