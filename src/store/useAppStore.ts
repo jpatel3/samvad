@@ -62,6 +62,32 @@ interface AppActions {
   setTheme: (theme: Theme) => void;
   setFontSize: (fontSize: FontSize) => void;
   resetProgress: () => void;
+  setUser: (userId: string, email: string | null) => void;
+  clearUser: () => void;
+  setSyncStatus: (syncing: boolean) => void;
+}
+
+// Debounce timer for cloud push
+let pushTimer: ReturnType<typeof setTimeout> | null = null;
+
+function schedulePush() {
+  if (pushTimer) clearTimeout(pushTimer);
+  pushTimer = setTimeout(async () => {
+    const state = useAppStore.getState();
+    if (!state.userId) return;
+    try {
+      const { pushProgress } = await import('../lib/sync');
+      const { supabase } = await import('../lib/supabase');
+      state.setSyncStatus(true);
+      const success = await pushProgress(supabase, state);
+      if (success) {
+        useAppStore.setState({ lastSyncedAt: new Date().toISOString() });
+      }
+      state.setSyncStatus(false);
+    } catch {
+      state.setSyncStatus(false);
+    }
+  }, 2000);
 }
 
 export const useAppStore = create<AppState & AppActions>()(
@@ -75,6 +101,22 @@ export const useAppStore = create<AppState & AppActions>()(
       settings: initialSettings,
       xp: 0,
       startDate: null,
+      userId: null,
+      userEmail: null,
+      lastSyncedAt: null,
+      isSyncing: false,
+
+      setUser: (userId: string, email: string | null) => {
+        set({ userId, userEmail: email });
+      },
+
+      clearUser: () => {
+        set({ userId: null, userEmail: null, lastSyncedAt: null, isSyncing: false });
+      },
+
+      setSyncStatus: (syncing: boolean) => {
+        set({ isSyncing: syncing });
+      },
 
       setActiveTrack: (trackId: TrackId) => {
         set({ activeTrack: trackId });
@@ -125,6 +167,8 @@ export const useAppStore = create<AppState & AppActions>()(
           xp: state.xp + xpGain,
           startDate,
         });
+
+        schedulePush();
       },
 
       syncStreak: () => {
@@ -178,6 +222,8 @@ export const useAppStore = create<AppState & AppActions>()(
           },
           xp: state.xp + result.xpEarned,
         });
+
+        schedulePush();
       },
 
       updateSettings: (newSettings: Partial<UserSettings>) => {
@@ -213,33 +259,66 @@ export const useAppStore = create<AppState & AppActions>()(
           xp: 0,
           startDate: null,
         });
+
+        schedulePush();
       },
     }),
     {
       name: 'samvad-store',
-      migrate: (persisted: unknown) => {
+      version: 2,
+      migrate: (persisted: unknown, version: number) => {
         const state = persisted as Record<string, unknown>;
-        // Migrate from old flat shape (vachanamrut-store) to new tracks shape
-        if (state && 'currentReading' in state && !('tracks' in state)) {
-          return {
-            activeTrack: 'vachanamrut' as TrackId,
-            tracks: {
-              vachanamrut: {
-                currentReading: state.currentReading as number,
-                completedReadings: state.completedReadings as number[],
-                readingHistory: state.readingHistory as ReadingHistory,
-                quizResults: state.quizResults as QuizResult[],
+
+        if (version === 0 || !version) {
+          // Migrate from old flat shape to new tracks shape
+          if (state && 'currentReading' in state && !('tracks' in state)) {
+            return {
+              activeTrack: 'vachanamrut' as TrackId,
+              tracks: {
+                vachanamrut: {
+                  currentReading: state.currentReading as number,
+                  completedReadings: state.completedReadings as number[],
+                  readingHistory: state.readingHistory as ReadingHistory,
+                  quizResults: state.quizResults as QuizResult[],
+                },
               },
-            },
-            streak: state.streak as StreakData,
-            settings: state.settings as UserSettings,
-            xp: state.xp as number,
-            startDate: state.startDate as string | null,
+              streak: state.streak as StreakData,
+              settings: state.settings as UserSettings,
+              xp: state.xp as number,
+              startDate: state.startDate as string | null,
+              userId: null,
+              userEmail: null,
+              lastSyncedAt: null,
+              isSyncing: false,
+            } as unknown as AppState & AppActions;
+          }
+          // Already has tracks but was v0 — add auth fields
+          return {
+            ...state,
+            userId: null,
+            userEmail: null,
+            lastSyncedAt: null,
+            isSyncing: false,
           } as unknown as AppState & AppActions;
         }
+
+        if (version === 1) {
+          // v1 → v2: add auth fields
+          return {
+            ...state,
+            userId: null,
+            userEmail: null,
+            lastSyncedAt: null,
+            isSyncing: false,
+          } as unknown as AppState & AppActions;
+        }
+
         return state as unknown as AppState & AppActions;
       },
-      version: 1,
+      partialize: (state) => {
+        const { isSyncing: _, ...rest } = state;
+        return rest as AppState & AppActions;
+      },
     }
   )
 );
@@ -269,8 +348,12 @@ export const useAppStore = create<AppState & AppActions>()(
             settings: old.settings ?? initialSettings,
             xp: old.xp ?? 0,
             startDate: old.startDate ?? null,
+            userId: null,
+            userEmail: null,
+            lastSyncedAt: null,
+            isSyncing: false,
           },
-          version: 1,
+          version: 2,
         };
         localStorage.setItem('samvad-store', JSON.stringify(migrated));
       }

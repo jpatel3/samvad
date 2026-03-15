@@ -86,6 +86,10 @@ export interface AppState {
   settings: UserSettings;
   xp: number;
   startDate: string | null;
+  userId: string | null;
+  userEmail: string | null;
+  lastSyncedAt: string | null;
+  isSyncing: boolean;
 }
 
 export interface Section {

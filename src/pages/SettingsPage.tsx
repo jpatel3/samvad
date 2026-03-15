@@ -6,12 +6,14 @@ import { useTheme } from '../hooks/useTheme';
 import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Modal } from '../components/common/Modal';
+import { AccountSection } from '../components/settings/AccountSection';
+import { AuthModal } from '../components/auth/AuthModal';
 import type { Language, FontSize } from '../types';
 
 const languages: { value: Language; label: string }[] = [
   { value: 'en', label: 'English' },
-  { value: 'gu', label: 'ગુજરાતી' },
-  { value: 'hi', label: 'हिन्दी' },
+  { value: 'gu', label: '\u0A97\u0AC1\u0A9C\u0AB0\u0ABE\u0AA4\u0AC0' },
+  { value: 'hi', label: '\u0939\u093F\u0928\u094D\u0926\u0940' },
 ];
 
 const fontSizes: { value: FontSize; labelKey: 'small' | 'medium' | 'large' }[] = [
@@ -27,6 +29,7 @@ export function SettingsPage() {
   const setFontSize = useAppStore((s) => s.setFontSize);
   const resetProgress = useAppStore((s) => s.resetProgress);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -34,6 +37,9 @@ export function SettingsPage() {
       <h1 className="text-xl font-bold text-text dark:text-text-dark">
         {t.settings.title}
       </h1>
+
+      {/* Account */}
+      <AccountSection onSignInClick={() => setShowAuthModal(true)} />
 
       {/* Language */}
       <Card>
@@ -71,7 +77,7 @@ export function SettingsPage() {
                 : 'bg-gray-100 dark:bg-gray-800 text-text dark:text-text-dark'
             }`}
           >
-            ☀️ {t.settings.light}
+            {t.settings.light}
           </button>
           <button
             onClick={() => theme !== 'dark' && toggleTheme()}
@@ -81,7 +87,7 @@ export function SettingsPage() {
                 : 'bg-gray-100 dark:bg-gray-800 text-text dark:text-text-dark'
             }`}
           >
-            🌙 {t.settings.dark}
+            {t.settings.dark}
           </button>
         </div>
       </Card>
@@ -163,6 +169,9 @@ export function SettingsPage() {
           </Button>
         </div>
       </Modal>
+
+      {/* Auth Modal */}
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 }
