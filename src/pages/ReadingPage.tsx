@@ -40,7 +40,10 @@ export function ReadingPage() {
     const texts = reading.dialogue.map((d) =>
       d.type === 'narrative' ? d.text : `${d.speaker}: ${d.text}`
     );
-    tts.play(texts, language);
+    const prefixLengths = reading.dialogue.map((d) =>
+      d.type === 'narrative' ? 0 : `${d.speaker}: `.length
+    );
+    tts.play(texts, language, prefixLengths);
   }, [reading, language, tts]);
 
   if (loading) {
@@ -132,7 +135,11 @@ export function ReadingPage() {
         </div>
       )}
 
-      <ReadingContent reading={reading} activeExchangeIndex={tts.state !== 'idle' ? tts.currentIndex : -1} />
+      <ReadingContent
+        reading={reading}
+        activeExchangeIndex={tts.state !== 'idle' ? tts.currentIndex : -1}
+        activeWordRange={tts.state === 'playing' ? tts.activeWordRange : null}
+      />
 
       <NavigationControls
         readingId={readingId}

@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import type { DialogueExchange } from '../../types';
+import type { WordRange } from '../../hooks/useTextToSpeech';
 import { SpeakerBadge } from './SpeakerBadge';
 import { useAppStore } from '../../store/useAppStore';
 
@@ -7,6 +8,7 @@ interface DialogueBlockProps {
   exchange: DialogueExchange;
   isLast: boolean;
   isActive?: boolean;
+  activeWordRange?: WordRange | null;
   onSpeakerClick?: (speaker: string) => void;
 }
 
@@ -16,7 +18,22 @@ const fontSizeClasses = {
   large: 'text-lg leading-loose',
 };
 
-export function DialogueBlock({ exchange, isLast, isActive, onSpeakerClick }: DialogueBlockProps) {
+function HighlightedText({ text, wordRange, className }: { text: string; wordRange: WordRange; className: string }) {
+  const { charIndex, charLength } = wordRange;
+  const before = text.slice(0, charIndex);
+  const word = text.slice(charIndex, charIndex + charLength);
+  const after = text.slice(charIndex + charLength);
+
+  return (
+    <div className={className}>
+      {before}
+      <span className="bg-accent/15 rounded-sm">{word}</span>
+      {after}
+    </div>
+  );
+}
+
+export function DialogueBlock({ exchange, isLast, isActive, activeWordRange, onSpeakerClick }: DialogueBlockProps) {
   const fontSize = useAppStore((s) => s.settings.fontSize);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -25,6 +42,9 @@ export function DialogueBlock({ exchange, isLast, isActive, onSpeakerClick }: Di
       ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [isActive]);
+
+  const showWordHighlight = isActive && activeWordRange && activeWordRange.charIndex >= 0;
+  const textClassName = `text-text dark:text-text-dark ${fontSizeClasses[fontSize]} mt-1 whitespace-pre-wrap`;
 
   return (
     <div
@@ -57,11 +77,17 @@ export function DialogueBlock({ exchange, isLast, isActive, onSpeakerClick }: Di
           type={exchange.type}
           onSpeakerClick={onSpeakerClick ? () => onSpeakerClick(exchange.speaker) : undefined}
         />
-        <div
-          className={`text-text dark:text-text-dark ${fontSizeClasses[fontSize]} mt-1 whitespace-pre-wrap`}
-        >
-          {exchange.text}
-        </div>
+        {showWordHighlight ? (
+          <HighlightedText
+            text={exchange.text}
+            wordRange={activeWordRange}
+            className={textClassName}
+          />
+        ) : (
+          <div className={textClassName}>
+            {exchange.text}
+          </div>
+        )}
       </div>
     </div>
   );

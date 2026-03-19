@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { VachanamrutReading } from '../../types';
+import type { WordRange } from '../../hooks/useTextToSpeech';
 import { DialogueBlock } from './DialogueBlock';
 import { CharacterBioModal } from './CharacterBioModal';
 import { getCharacterBio, type CharacterBio } from '../../constants/characterBios';
@@ -9,9 +10,10 @@ import { useLanguage } from '../../hooks/useLanguage';
 interface ReadingContentProps {
   reading: VachanamrutReading;
   activeExchangeIndex?: number;
+  activeWordRange?: WordRange | null;
 }
 
-export function ReadingContent({ reading, activeExchangeIndex = -1 }: ReadingContentProps) {
+export function ReadingContent({ reading, activeExchangeIndex = -1, activeWordRange = null }: ReadingContentProps) {
   const showSetting = useAppStore((s) => s.settings.showSetting);
   const { t } = useLanguage();
   const [selectedBio, setSelectedBio] = useState<CharacterBio | null>(null);
@@ -64,6 +66,7 @@ export function ReadingContent({ reading, activeExchangeIndex = -1 }: ReadingCon
               exchange={exchange}
               isLast={index === reading.dialogue.length - 1}
               isActive={index === activeExchangeIndex}
+              activeWordRange={index === activeExchangeIndex ? activeWordRange : null}
               onSpeakerClick={handleSpeakerClick}
             />
           ))}

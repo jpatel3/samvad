@@ -5,12 +5,18 @@ export type TTSState = 'idle' | 'playing' | 'paused';
 
 export type TTSSpeed = 0.8 | 1 | 1.2 | 1.5;
 
+export interface WordRange {
+  charIndex: number;
+  charLength: number;
+}
+
 interface UseTextToSpeechReturn {
   state: TTSState;
   currentIndex: number;
+  activeWordRange: WordRange | null;
   speed: TTSSpeed;
   isAvailable: boolean;
-  play: (texts: string[], lang: Language) => void;
+  play: (texts: string[], lang: Language, prefixLengths?: number[]) => void;
   pause: () => void;
   resume: () => void;
   stop: () => void;
@@ -37,16 +43,17 @@ function findVoice(lang: Language): SpeechSynthesisVoice | null {
 export function useTextToSpeech(): UseTextToSpeechReturn {
   const [state, setState] = useState<TTSState>('idle');
   const [currentIndex, setCurrentIndex] = useState(-1);
+  const [activeWordRange, setActiveWordRange] = useState<WordRange | null>(null);
   const [speed, setSpeedState] = useState<TTSSpeed>(1);
   const [isAvailable, setIsAvailable] = useState(true);
 
   const textsRef = useRef<string[]>([]);
+  const prefixLensRef = useRef<number[]>([]);
   const langRef = useRef<Language>('en');
   const speedRef = useRef<TTSSpeed>(1);
   const indexRef = useRef(-1);
   const stoppedRef = useRef(false);
 
-  // Check basic TTS support
   useEffect(() => {
     setIsAvailable(typeof window !== 'undefined' && 'speechSynthesis' in window);
   }, []);
@@ -55,6 +62,7 @@ export function useTextToSpeech(): UseTextToSpeechReturn {
     if (index >= textsRef.current.length) {
       setState('idle');
       setCurrentIndex(-1);
+      setActiveWordRange(null);
       indexRef.current = -1;
       return;
     }
@@ -70,8 +78,21 @@ export function useTextToSpeech(): UseTextToSpeechReturn {
       utterance.lang = langMap[langRef.current][0];
     }
 
+    const prefixLen = prefixLensRef.current[index] || 0;
+
+    utterance.onboundary = (e) => {
+      if (stoppedRef.current) return;
+      if (e.name === 'word') {
+        const adjustedIndex = e.charIndex - prefixLen;
+        if (adjustedIndex >= 0) {
+          setActiveWordRange({ charIndex: adjustedIndex, charLength: e.charLength });
+        }
+      }
+    };
+
     utterance.onend = () => {
       if (stoppedRef.current) return;
+      setActiveWordRange(null);
       const next = indexRef.current + 1;
       indexRef.current = next;
       setCurrentIndex(next);
@@ -82,21 +103,24 @@ export function useTextToSpeech(): UseTextToSpeechReturn {
       if (e.error === 'canceled' || e.error === 'interrupted') return;
       setState('idle');
       setCurrentIndex(-1);
+      setActiveWordRange(null);
       indexRef.current = -1;
     };
 
     window.speechSynthesis.speak(utterance);
   }, []);
 
-  const play = useCallback((texts: string[], lang: Language) => {
+  const play = useCallback((texts: string[], lang: Language, prefixLengths?: number[]) => {
     if (!isAvailable) return;
 
     window.speechSynthesis.cancel();
     stoppedRef.current = false;
     textsRef.current = texts;
+    prefixLensRef.current = prefixLengths || texts.map(() => 0);
     langRef.current = lang;
     indexRef.current = 0;
     setCurrentIndex(0);
+    setActiveWordRange(null);
     setState('playing');
     speakAt(0);
   }, [isAvailable, speakAt]);
@@ -119,6 +143,7 @@ export function useTextToSpeech(): UseTextToSpeechReturn {
     window.speechSynthesis.cancel();
     setState('idle');
     setCurrentIndex(-1);
+    setActiveWordRange(null);
     indexRef.current = -1;
   }, [isAvailable]);
 
@@ -126,7 +151,6 @@ export function useTextToSpeech(): UseTextToSpeechReturn {
     setSpeedState(newSpeed);
     speedRef.current = newSpeed;
 
-    // If currently playing, restart current utterance at new speed
     if (state === 'playing') {
       stoppedRef.current = true;
       window.speechSynthesis.cancel();
@@ -136,7 +160,6 @@ export function useTextToSpeech(): UseTextToSpeechReturn {
     }
   }, [state, speakAt]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       stoppedRef.current = true;
@@ -144,5 +167,5 @@ export function useTextToSpeech(): UseTextToSpeechReturn {
     };
   }, []);
 
-  return { state, currentIndex, speed, isAvailable, play, pause, resume, stop, setSpeed };
+  return { state, currentIndex, activeWordRange, speed, isAvailable, play, pause, resume, stop, setSpeed };
 }
